@@ -1,0 +1,22 @@
+UFCD 10790 – Levantamento de Requisitos Funcionais (RF)   |   Projeto: Gestão de tarefas  |   Grupo: ___________;;;;;;;;
+Data: 29/07/2026     Versão: 1.0     Formador: Carlos Barata     Estado geral: Em curso;;;;;;;;
+;;;;;;;;
+ID;Nome do Requisito;Descrição Detalhada;Ator / Utilizador;Prioridade;Estado;Critério de Aceitação;Notas / Observações;Módulo
+RF01;Criar Tarefa;O sistema deve permitir criar uma tarefa com título, descrição, prioridade, estado e prazo.;Cliente;Alta;Pendente;Tarefa criada aparece na BD e na listagem.;Validar campos obrigatórios. ;Tarefas
+RF02;Listar Tarefa;O sistema deve listar todas as tarefas existentes, com opção de ordenação e filtros.;Cliente;Alta;Pendente;Lista mostra tarefas formatadas e atualizadas.;Filtros por estado e prioridade.;Tarefas
+RF03;Editar Tarefa;O sistema deve permitir editar qualquer campo da tarefa.;Cliente;Alta;Pendente;As alterações são guardadas na BD e refletidas na listagem. ;Validar datas e prioridade. ;Tarefas
+RF04;Concluir Tarefa;O sistema deve permitir marcar uma tarefa como concluída.;Cliente;Alta;Pendente;Estado muda para “concluída” na BD.;Validar se stock é suficiente.;Carrinho
+RF05;Mover Tarefa;O sistema deve permitir reorganizar a posição das tarefas na lista. ;Cliente;Alta;Pendente;A nova posição é refletida na listagem;Nao altera a BD, apenas a ordem visual;UI
+RF06;Apagar Tarefa;O sistema deve permitir remover tarefas de forma definitiva.;Cliente;Alta;Pendente; A tarefa é removida da BD e desaparece da listagem. ;Confirmar antes de apagar;Tarefas
+RF07;Guardar na Base de Dados;O sistema deve guardar automaticamente todas as tarefas na base de dados.;Sistema;Alta;Pendente;Os dados persistem após o restart da aplicação;Suporta SQLite ou MySQL;DAL
+RF08;Carregar Dados;O sistema deve carregar todas as tarefas da base de dados ao iniciar.;Sistema;Alta;Pendente;A listagem inicial corresponde aos dados guardados.;;DAL
+RF09;Dashboard Gráfico;O sistema deve gerar um gráfico com estatísticas das tarefas (por estado).;Cliente;Média;Pendente;O gráfico é exibido corretamente com dados atualizados.;Utiliza Matplotlib;Dashboard
+RF10;Validar Datas; O sistema deve validar datas inseridas (meses, anos bissextos, limites).;Sistema;Média;Pendente;Datas inválidas são rejeitadas com mensagem clara.;Evita Erros na BD;BLL
+RF11;Filtrar Tarefas;O sistema deve permitir filtrar tarefas por estado, prioridade ou prazo.;Cliente;Média;Pendente; A listagem mostra apenas tarefas que cumprem o filtro.;;Tarefas
+RF12;Ordenar Tarefas;O sistema deve permitir ordenar tarefas por estado, prioridade, data ou prazo.;Cliente;Média;Pendente;A lista é apresentada ordenada segundo o critério selecionado. ;"Ordenação apenas visual; não altera a BD. ";Tarefas
+Total de requisitos Funcionais (RF);;;;12;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+;;;;;;;;
+Prioridade:    Alta = obrigatório para a entrega    |    Média = importante mas não crítico    |    Baixa = nice-to-have;;;;;;;;
