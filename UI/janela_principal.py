@@ -10,7 +10,7 @@ class JanelaPrincipal(tk.Tk):
         super().__init__()
 
         self.title("Gestor de Tarefas")
-        self.minsize(1100, 650)
+        self.minsize(800, 650)
 
         # Frame de conteúdo
         self.frame_conteudo = tk.Frame(self, bg="#FFFFFF")
