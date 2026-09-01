@@ -8,12 +8,12 @@ Aplicação de consola em Python que permite a estudantes gerir tarefas académi
 
 | Campo            | Detalhe                              |
 |------------------|--------------------------------------|
-| **Curso**        | UFCD 10790 – Projeto de Programação  |
+| **Curso**        | UFCD 5425 – Projeto de Programação   |
 | **Formando**     | Diogo Amaro                          |
 | **Formador**     | Carlos Barata                        |
 | **Instituição**  | IEFP                                 |
-| **Data de início** | [25/05/2026]                       |
-| **Data de entrega** | [19/06/2026]                      |
+| **Data de início** | [28/07/2026]                       |
+| **Data de entrega** | [10/09/2026]                      |
 | **Versão**       | 1.0                                  |
 
 ---
@@ -34,19 +34,21 @@ Aplicação de consola em Python que permite a estudantes gerir tarefas académi
 
 ## Descrição
 
-A aplicação Gestão de Tarefas para Estudantes foi desenvolvida para ajudar alunos a organizarem o seu estudo diário, trabalhos, exames e atividades importantes.
+A aplicação Gestão de Tarefas para Estudantes foi desenvolvida para ajudar alunos, jovens e adultos a organizarem o seu estudo diário, trabalhos, exames e atividades importantes.
 
-Muitos estudantes têm dificuldade em acompanhar prazos, priorizar tarefas e manter um registo claro do que já foi concluído. Este projeto resolve esse problema através de uma aplicação simples, intuitiva e totalmente executada em consola, com:
+Muitos estudantes, jovens e adultos têm dificuldade em acompanhar prazos, priorizar tarefas e manter um registo claro do que já foi concluído. Este projeto resolve esse problema através de uma aplicação com ambiente gráfico e intuitiva com:
 
-registo de tarefas
+Criação de tarefas
 
-edição e remoção
+edição de tarefas
+
+Eliminação de tarefas
 
 marcação como concluída
 
 listagem filtrada por estado ou prioridade
 
-persistência dos dados em ficheiro JSON
+persistência dos dados na base de dados
 A aplicação foi construída em Python, seguindo uma arquitetura em três camadas (UI, BLL, DAL)
 
 ## Funcionalidades
@@ -63,11 +65,9 @@ Lista as principais funcionalidades implementadas:
 
 [x] Apagar tarefa
 
-[x] Guardar e carregar dados automaticamente
+[ ] Guardar e carregar dados automaticamente
 
 [ ] Exportar relatório de tarefas (opcional)
-
-[ ] Pesquisa avançada (opcional)
 
 As checkboxes ficam marcadas à medida que a funcionalidade é implementada.
 
@@ -97,14 +97,12 @@ projeto_ufcd10790/
 │   ├── requisitos.xlsx     ← Levantamento de requisitos (RF e RNF)
 │   ├── manual_utilizador.docx  ← Manual de utilização da aplicação
 │   └── manual_tecnico.docx     ← Manual de instalação e configuração
+│   └── ...
 │
 ├── assets/                 ← Recursos visuais e apresentação
 │   ├── apresentacao.pptx   ← Apresentação final
 │   ├── diagrama_arquitetura.png  ← Diagrama de arquitetura do sistema
-│   └── diagrama_bd.png          ← Diagrama da base de dados (se aplicável)
-│
-└── tests/                  ← Testes (opcional mas recomendado)
-    └── test_bll.py         ← Testes
+
 
 ```
 
@@ -203,4 +201,4 @@ Sessão 5 — Apresentação      ⏳ Pendente
 
 ---
 
-*UFCD 10790 – Projeto de Programação | [Ano letivo]*
+*UFCD 5425 – Projeto de Programação | [Ano letivo]*
