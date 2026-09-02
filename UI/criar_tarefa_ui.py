@@ -34,7 +34,7 @@ class CriarTarefaUI:
         titulo_entry = ttk.Entry(card, width=45)
         titulo_entry.pack(pady=5, anchor="w")
 
-        # Descrição (Windows 11 style)
+        # Descrição
         ttk.Label(card, text="Descrição:", anchor="w").pack(fill="x")
 
         descricao_frame = tk.Frame(card, bg="#FFFFFF")
@@ -77,7 +77,7 @@ class CriarTarefaUI:
         estado_combo = ttk.Combobox(
             card,
             textvariable=estado_var,
-            values=["Por fazer", "Em progresso", "Concluída"],
+            values=["Por fazer", "Em progresso"],
             state="readonly",
             width=20
         )

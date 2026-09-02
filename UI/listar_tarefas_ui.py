@@ -3,6 +3,8 @@ from tkinter import ttk, messagebox
 from DAL.database import renumerar_ids
 from DAL.tarefas_dal import listar_tarefas
 from BLL.tarefas_bll import apagar_tarefa as apagar_tarefa_bll
+from DAL.tarefas_concluidas_dal import guardar_tarefa_concluida
+from BLL.tarefas_bll import concluir_tarefa_bll
 
 class ListarTarefasUI:
     def __init__(self, frame, voltar_menu_callback):
@@ -125,7 +127,7 @@ class ListarTarefasUI:
         prioridade_combo.set(tarefa["prioridade"])
 
         ttk.Label(card, text="Estado:").pack(anchor="w", pady=5)
-        estado_combo = ttk.Combobox(card, values=["Concluída", "Em progresso", "Pendente"])
+        estado_combo = ttk.Combobox(card, values=["Quase a terminar", "Em progresso", "Pendente"])
         estado_combo.pack(fill="x")
         estado_combo.set(tarefa["estado"])
 
@@ -156,10 +158,16 @@ class ListarTarefasUI:
 
             janela.destroy()
             self.recarregar_lista()
-
+            
+                
         ttk.Button(card, text="Guardar Alterações", command=guardar).pack(pady=20)
 
-
+    def concluir_tarefa(self, id_tarefa, janela):
+        concluir_tarefa_bll(id_tarefa)
+        messagebox.showinfo("Sucesso", "Tarefa marcada como concluída!")
+        self.recarregar_lista()
+        janela.destroy()
+        
     # ---------------------------------------------------------
     # Recarregar tabela (CORRIGIDO)
     # ---------------------------------------------------------
@@ -228,7 +236,17 @@ class ListarTarefasUI:
             ttk.Label(box, text=valor, font=("Segoe UI", 11), background=cor).pack(anchor="w")
 
         cor_prioridade = "#FFD966" if tarefa["prioridade"] == "Alta" else "#FFE699" if tarefa["prioridade"] == "Média" else "#FFF2CC"
-        cor_estado = "#C6E0B4" if tarefa["estado"] == "Concluída" else "#F4B084" if tarefa["estado"] == "Em progresso" else "#BDD7EE"
+        cor_estado = "#A9D08E"   # verde concluída
+        if tarefa["estado"] == "Concluída":
+            cor_estado = "#A9D08E"   # verde concluída
+        elif tarefa["estado"] == "Quase a terminar":
+            cor_estado = "#C6E0B4"
+        elif tarefa["estado"] == "Em progresso":
+            cor_estado = "#F4B084"
+        else:
+            cor_estado = "#BDD7EE"   # pendente ou outro estado
+
+
 
         criar_quadrado(linha_status, "Prioridade:", tarefa["prioridade"], cor_prioridade)
         criar_quadrado(linha_status, "Estado:", tarefa["estado"], cor_estado)
@@ -242,12 +260,24 @@ class ListarTarefasUI:
         btn_frame = tk.Frame(card, bg="#FFFFFF")
         btn_frame.pack(pady=15)
 
-        ttk.Button(btn_frame, text="Editar", width=15,
-           command=lambda: (detalhes.destroy(), self.editar_tarefa(tarefa))).pack(side="left", padx=10)
+        # Se a tarefa está concluída → bloquear ações
+        if tarefa["estado"].lower() == "concluída":
+            ttk.Button(btn_frame, text="Editar", width=15, state="disabled").pack(side="left", padx=10)
+            ttk.Button(btn_frame, text="Apagar", width=15, state="disabled").pack(side="left", padx=10)
+            ttk.Button(btn_frame, text="Concluir", width=15, state="disabled").pack(side="left", padx=10)
+        else:
+            ttk.Button(btn_frame, text="Editar", width=15,
+                command=lambda: (detalhes.destroy(), self.editar_tarefa(tarefa))).pack(side="left", padx=10)
 
-        ttk.Button(btn_frame, text="Apagar", width=15,
-           command=lambda: self.apagar_tarefa(tarefa["id"], detalhes)).pack(side="left", padx=10)
+            ttk.Button(btn_frame, text="Apagar", width=15,
+                command=lambda: self.apagar_tarefa(tarefa["id"], detalhes)).pack(side="left", padx=10)
 
-
+            ttk.Button(btn_frame, text="Concluir", width=15,
+                command=lambda: self.concluir_tarefa(tarefa["id"], detalhes)).pack(side="left", padx=10)
+                    
+    
         ttk.Button(card, text="Voltar ao Menu", width=20,
                    command=lambda: (detalhes.destroy(), self.recarregar_lista())).pack(pady=10)
+
+
+

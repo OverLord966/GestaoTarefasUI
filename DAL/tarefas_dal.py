@@ -53,3 +53,30 @@ def apagar_tarefa(tarefa_id):
     cursor.execute("DELETE FROM tarefas WHERE id = %s", (tarefa_id,))
     conn.commit()
     conn.close()
+def obter_tarefa_por_id_dal(id_tarefa):
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="gestor_tarefas"
+    )
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM tarefas WHERE id = %s", (id_tarefa,))
+    tarefa = cursor.fetchone()
+
+    conn.close()
+    return tarefa
+
+def concluir_tarefa_dal(id_tarefa):
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",
+        database="gestor_tarefas"
+    )
+    cursor = conn.cursor()
+
+    cursor.execute("UPDATE tarefas SET estado = %s WHERE id = %s", ("concluída", id_tarefa))
+    conn.commit()
+    conn.close()

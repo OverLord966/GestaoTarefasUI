@@ -2,6 +2,13 @@ from DAL.tarefas_dal import criar_tarefa, listar_tarefas
 from datetime import datetime, date
 from DAL.tarefas_dal import apagar_tarefa as apagar_tarefa_dal
 from DAL.tarefas_dal import editar_tarefa as editar_tarefa_dal
+from DAL.tarefas_dal import obter_tarefa_por_id_dal
+from DAL.tarefas_dal import concluir_tarefa_dal, obter_tarefa_por_id_dal
+from DAL.tarefas_concluidas_dal import guardar_tarefa_concluida
+
+from DAL.tarefas_dal import concluir_tarefa_dal, obter_tarefa_por_id_dal
+from DAL.tarefas_concluidas_dal import guardar_tarefa_concluida
+
 def adicionar_tarefa(titulo, descricao, prioridade, estado, prazo):
     # Validar título
     if not titulo.strip():
@@ -41,3 +48,21 @@ def editar_tarefa(id, titulo, descricao, prioridade, estado, prazo):
 
 def apagar_tarefa(id):
     apagar_tarefa_dal(id)
+
+def concluir_tarefa_bll(id_tarefa):
+    # Atualiza na base de dados
+    concluir_tarefa_dal(id_tarefa)
+
+    # Vai buscar a tarefa já atualizada
+    tarefa = obter_tarefa_por_id_dal(id_tarefa)
+
+    # Guarda no JSON de histórico
+    if tarefa:
+        guardar_tarefa_concluida(tarefa)
+
+
+def concluir_tarefa_bll(id_tarefa):
+    concluir_tarefa_dal(id_tarefa)
+    tarefa = obter_tarefa_por_id_dal(id_tarefa)
+    if tarefa:
+        guardar_tarefa_concluida(tarefa)
