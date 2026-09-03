@@ -5,6 +5,9 @@ from DAL.tarefas_dal import listar_tarefas
 from BLL.tarefas_bll import apagar_tarefa as apagar_tarefa_bll
 from DAL.tarefas_concluidas_dal import guardar_tarefa_concluida
 from BLL.tarefas_bll import concluir_tarefa_bll
+from UI.editar_tarefas_ui import EditarTarefaUI
+from UI.editar_tarefas_ui import EditarTarefaUI
+from UI.apagar_tarefa_ui import ApagarTarefaUI
 
 class ListarTarefasUI:
     def __init__(self, frame, voltar_menu_callback):
@@ -77,91 +80,6 @@ class ListarTarefasUI:
 
         ttk.Button(card, text="Voltar ao Menu", command=voltar_menu_callback).pack(pady=10)
 
-
-    # ---------------------------------------------------------
-    # Apagar tarefa
-    # ---------------------------------------------------------
-    def apagar_tarefa(self, tarefa_id, janela):
-        resposta = messagebox.askyesno(
-            "Confirmar eliminação",
-            "Tens a certeza que queres apagar esta tarefa?"
-        )
-
-        if resposta:
-            apagar_tarefa_bll(tarefa_id)   # chama BLL → DAL → BD
-            renumerar_ids()            # renumera IDs
-            janela.destroy()
-            self.recarregar_lista()
-
-
-    # ---------------------------------------------------------
-    # Editar tarefa
-    # ---------------------------------------------------------
-    def editar_tarefa(self, tarefa):
-        janela = tk.Toplevel()
-        janela.title("Editar Tarefa")
-        janela.configure(bg="#F3F3F3")
-        janela.geometry("700x700")
-
-        card = tk.Frame(janela, bg="#FFFFFF", padx=20, pady=20, bd=1, relief="solid")
-        card.pack(fill="both", expand=True, pady=20)
-
-        ttk.Label(card, text="Editar Tarefa", font=("Segoe UI", 18)).pack(pady=10)
-
-        # -----------------------------
-        # CAMPOS
-        # -----------------------------
-        ttk.Label(card, text="Título:").pack(anchor="w")
-        titulo_entry = ttk.Entry(card)
-        titulo_entry.pack(fill="x")
-        titulo_entry.insert(0, tarefa["titulo"])
-
-        ttk.Label(card, text="Descrição:").pack(anchor="w", pady=5)
-        descricao_text = tk.Text(card, height=5)
-        descricao_text.pack(fill="x")
-        descricao_text.insert("1.0", tarefa["descricao"])
-
-        ttk.Label(card, text="Prioridade:").pack(anchor="w", pady=5)
-        prioridade_combo = ttk.Combobox(card, values=["Alta", "Média", "Baixa"])
-        prioridade_combo.pack(fill="x")
-        prioridade_combo.set(tarefa["prioridade"])
-
-        ttk.Label(card, text="Estado:").pack(anchor="w", pady=5)
-        estado_combo = ttk.Combobox(card, values=["Quase a terminar", "Em progresso", "Pendente"])
-        estado_combo.pack(fill="x")
-        estado_combo.set(tarefa["estado"])
-
-        ttk.Label(card, text="Prazo (AAAA-MM-DD):").pack(anchor="w", pady=5)
-        prazo_entry = ttk.Entry(card)
-        prazo_entry.pack(fill="x")
-        prazo_entry.insert(0, tarefa["prazo"])
-
-        # -----------------------------
-        # BOTÃO GUARDAR
-        # -----------------------------
-        def guardar():
-            novo_titulo = titulo_entry.get()
-            nova_descricao = descricao_text.get("1.0", "end").strip()
-            nova_prioridade = prioridade_combo.get()
-            novo_estado = estado_combo.get()
-            novo_prazo = prazo_entry.get()
-
-            from BLL.tarefas_bll import editar_tarefa as editar_bll
-            editar_bll(
-                tarefa["id"],
-                novo_titulo,
-                nova_descricao,
-                nova_prioridade,
-                novo_estado,
-                novo_prazo
-            )
-
-            janela.destroy()
-            self.recarregar_lista()
-            
-                
-        ttk.Button(card, text="Guardar Alterações", command=guardar).pack(pady=20)
-
     def concluir_tarefa(self, id_tarefa, janela):
         concluir_tarefa_bll(id_tarefa)
         messagebox.showinfo("Sucesso", "Tarefa marcada como concluída!")
@@ -188,8 +106,8 @@ class ListarTarefasUI:
         extra_height = min(descricao_len // 7, 180)
         altura_final = 560 + extra_height
 
-        detalhes.geometry(f"600x{altura_final}")
-        detalhes.minsize(800, 600)
+        detalhes.geometry(f"700x{altura_final}")
+        detalhes.minsize(800, 700)
 
         card = tk.Frame(detalhes, bg="#FFFFFF", padx=25, pady=20, bd=1, relief="solid")
         card.pack(fill="both", expand=True, pady=15)
@@ -269,8 +187,9 @@ class ListarTarefasUI:
             ttk.Button(btn_frame, text="Editar", width=15,
                 command=lambda: (detalhes.destroy(), self.editar_tarefa(tarefa))).pack(side="left", padx=10)
 
+
             ttk.Button(btn_frame, text="Apagar", width=15,
-                command=lambda: self.apagar_tarefa(tarefa["id"], detalhes)).pack(side="left", padx=10)
+                command=lambda: (detalhes.destroy(), self.apagar_tarefa(tarefa))).pack(side="left", padx=10)
 
             ttk.Button(btn_frame, text="Concluir", width=15,
                 command=lambda: self.concluir_tarefa(tarefa["id"], detalhes)).pack(side="left", padx=10)
@@ -278,6 +197,9 @@ class ListarTarefasUI:
     
         ttk.Button(card, text="Voltar ao Menu", width=20,
                    command=lambda: (detalhes.destroy(), self.recarregar_lista())).pack(pady=10)
-
+    def editar_tarefa(self, tarefa):
+        EditarTarefaUI(tarefa, self.recarregar_lista)
+    def apagar_tarefa(self, tarefa):
+        ApagarTarefaUI(tarefa, self.recarregar_lista)
 
 

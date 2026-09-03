@@ -2,23 +2,52 @@ import tkinter as tk
 from UI.welcome_ui import WelcomeUI
 from UI.listar_tarefas_ui import ListarTarefasUI
 from UI.criar_tarefa_ui import CriarTarefaUI
+# from UI.dashboard_ui import DashboardUI   # caso já exista
 
 class JanelaPrincipal(tk.Tk):
     def __init__(self):
-        
-        
         super().__init__()
 
+        # -----------------------------
+        # JANELA PRINCIPAL
+        # -----------------------------
         self.title("Gestor de Tarefas")
-        self.minsize(800, 650)
+        self.minsize(900, 700)
+        self.configure(bg="#F3F3F3")  # fundo moderno
 
-        # Frame de conteúdo
-        self.frame_conteudo = tk.Frame(self, bg="#FFFFFF")
-        self.frame_conteudo.pack(expand=True, fill="both")
+        # -----------------------------
+        # BARRA SUPERIOR (Fluent UI)
+        # -----------------------------
+        topbar = tk.Frame(self, bg="#0A66C2", height=55)
+        topbar.pack(fill="x")
+
+        titulo = tk.Label(
+            topbar,
+            text="Gestor de Tarefas",
+            fg="white",
+            bg="#0A66C2",
+            font=("Segoe UI", 20, "bold")
+        )
+        titulo.pack(side="left", padx=20)
+
+        # -----------------------------
+        # FRAME DE CONTEÚDO (cartão)
+        # -----------------------------
+        self.frame_conteudo = tk.Frame(
+            self,
+            bg="#FFFFFF",
+            bd=0,
+            highlightthickness=1,
+            highlightbackground="#D0D0D0"
+        )
+        self.frame_conteudo.pack(expand=True, fill="both", padx=20, pady=20)
 
         # Ecrã inicial (menu)
         self._voltar_ao_menu()
 
+    # -----------------------------
+    # VOLTAR AO MENU
+    # -----------------------------
     def _voltar_ao_menu(self):
         WelcomeUI(
             self.frame_conteudo,
@@ -28,11 +57,23 @@ class JanelaPrincipal(tk.Tk):
             self.destroy
         )
 
+    # -----------------------------
+    # ABRIR CRIAR TAREFA
+    # -----------------------------
     def _abrir_criar_tarefa(self):
         CriarTarefaUI(self.frame_conteudo, self._voltar_ao_menu)
 
+    # -----------------------------
+    # ABRIR LISTAR TAREFAS
+    # -----------------------------
     def _abrir_listar_tarefas(self):
         ListarTarefasUI(self.frame_conteudo, self._voltar_ao_menu)
 
+    # -----------------------------
+    # ABRIR DASHBOARD
+    # -----------------------------
     def _abrir_dashboard(self):
-        DashboardUI(self.frame_conteudo, self._voltar_ao_menu)
+        try:
+            DashboardUI(self.frame_conteudo, self._voltar_ao_menu)
+        except NameError:
+            messagebox.showinfo("Dashboard", "Dashboard ainda não está implementado.")
