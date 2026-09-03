@@ -72,8 +72,8 @@ class JanelaPrincipal(tk.Tk):
     # -----------------------------
     # ABRIR DASHBOARD
     # -----------------------------
-    def _abrir_dashboard(self):
-        try:
-            DashboardUI(self.frame_conteudo, self._voltar_ao_menu)
-        except NameError:
-            messagebox.showinfo("Dashboard", "Dashboard ainda não está implementado.")
+    #def _abrir_dashboard(self):
+    #    try:
+    #        DashboardUI(self.frame_conteudo, self._voltar_ao_menu)
+    #    except NameError:
+    #       messagebox.showinfo("Dashboard", "Dashboard ainda não está implementado.")
