@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from tkcalendar import DateEntry
-from datetime import date, timedelta
+from datetime import date
 from BLL.tarefas_bll import criar_tarefa
 from DAL.database import renumerar_ids
+from UI.calendario_moderno import CalendarioModerno
 
 class CriarTarefaUI:
 
@@ -12,7 +12,7 @@ class CriarTarefaUI:
             card,
             text=mensagem,
             fg="#B00020",
-            bg="#FFFFFF",
+            bg=card["bg"],
             font=("Segoe UI", 11)
         )
         erro.pack(pady=5)
@@ -24,37 +24,74 @@ class CriarTarefaUI:
         for widget in frame.winfo_children():
             widget.destroy()
 
-        # Container central
-        container = tk.Frame(frame, bg="#F3F3F3")
+        self.frame = frame
+
+        # -----------------------------
+        # TEMA (Light / Dark)
+        # -----------------------------
+        modo_escuro = getattr(frame.master, "modo_escuro", False)
+
+        if modo_escuro:
+            fundo = "#1E1E1E"
+            card_cor = "#2A2A2A"
+            texto = "#FFFFFF"
+            cor_botao = "#0A3A66"
+            cor_hover = "#06294A"
+            entrada_bg = "#3A3A3A"
+            entrada_fg = "#FFFFFF"
+        else:
+            fundo = "#F3F3F3"
+            card_cor = "#FFFFFF"
+            texto = "#1A1A1A"
+            cor_botao = "#0A66C2"
+            cor_hover = "#084C8A"
+            entrada_bg = "#FFFFFF"
+            entrada_fg = "#1A1A1A"
+
+        # -----------------------------
+        # CONTAINER
+        # -----------------------------
+        container = tk.Frame(frame, bg=fundo)
         container.pack(expand=True)
 
-        # Card moderno estilo Windows 11 (sem sombra estranha)
+        # -----------------------------
+        # CARD
+        # -----------------------------
         card = tk.Frame(
             container,
-            bg="#FFFFFF",
+            bg=card_cor,
             padx=40,
             pady=40,
-            bd=0,
             highlightthickness=1,
             highlightbackground="#D0D0D0"
         )
         card.pack(pady=20)
 
-        ttk.Label(card, text="Criar Nova Tarefa", font=("Segoe UI", 22, "bold")).pack(pady=10)
+        ttk.Label(
+            card,
+            text="Criar Nova Tarefa",
+            font=("Segoe UI", 22, "bold"),
+            foreground=texto,
+            background=card_cor
+        ).pack(pady=10)
 
         # -----------------------------
         # TÍTULO
         # -----------------------------
-        ttk.Label(card, text="Título:", anchor="w", font=("Segoe UI", 11)).pack(fill="x")
-        titulo_entry = ttk.Entry(card, width=45)
+        ttk.Label(card, text="Título:", anchor="w", font=("Segoe UI", 11),
+                  foreground=texto, background=card_cor).pack(fill="x")
+
+        titulo_entry = tk.Entry(card, width=45, bg=entrada_bg, fg=entrada_fg,
+                                relief="solid", bd=1, font=("Segoe UI", 11))
         titulo_entry.pack(pady=5, anchor="w")
 
         # -----------------------------
         # DESCRIÇÃO
         # -----------------------------
-        ttk.Label(card, text="Descrição:", anchor="w", font=("Segoe UI", 11)).pack(fill="x")
+        ttk.Label(card, text="Descrição:", anchor="w", font=("Segoe UI", 11),
+                  foreground=texto, background=card_cor).pack(fill="x")
 
-        descricao_frame = tk.Frame(card, bg="#FFFFFF")
+        descricao_frame = tk.Frame(card, bg=card_cor)
         descricao_frame.pack(fill="x", pady=5)
 
         descricao_text = tk.Text(
@@ -63,10 +100,11 @@ class CriarTarefaUI:
             width=45,
             font=("Segoe UI", 11),
             wrap="word",
-            bd=0,
-            relief="flat",
-            highlightthickness=1,
-            highlightbackground="#D0D0D0"
+            bd=1,
+            relief="solid",
+            highlightthickness=0,
+            bg=entrada_bg,
+            fg=entrada_fg
         )
         descricao_text.pack(side="left", fill="both", expand=True)
 
@@ -77,7 +115,9 @@ class CriarTarefaUI:
         # -----------------------------
         # PRIORIDADE
         # -----------------------------
-        ttk.Label(card, text="Prioridade:", anchor="w", font=("Segoe UI", 11)).pack(fill="x")
+        ttk.Label(card, text="Prioridade:", anchor="w", font=("Segoe UI", 11),
+                  foreground=texto, background=card_cor).pack(fill="x")
+
         prioridade_var = tk.StringVar()
         prioridade_combo = ttk.Combobox(
             card,
@@ -92,7 +132,9 @@ class CriarTarefaUI:
         # -----------------------------
         # ESTADO
         # -----------------------------
-        ttk.Label(card, text="Estado:", anchor="w", font=("Segoe UI", 11)).pack(fill="x")
+        ttk.Label(card, text="Estado:", anchor="w", font=("Segoe UI", 11),
+                  foreground=texto, background=card_cor).pack(fill="x")
+
         estado_var = tk.StringVar()
         estado_combo = ttk.Combobox(
             card,
@@ -105,29 +147,38 @@ class CriarTarefaUI:
         estado_combo.pack(pady=5, anchor="w")
 
         # -----------------------------
-        # PRAZO
+        # PRAZO (Calendário moderno)
         # -----------------------------
-        ttk.Label(card, text="Prazo:", anchor="w", font=("Segoe UI", 11)).pack(fill="x")
+        ttk.Label(card, text="Prazo:", anchor="w", font=("Segoe UI", 11),
+                  foreground=texto, background=card_cor).pack(fill="x")
 
-        maxdate = date.today() + timedelta(days=365)
+        prazo_var = tk.StringVar()
+        prazo_var.set(date.today().strftime("%Y-%m-%d"))
 
-        prazo_entry = DateEntry(
+        def abrir_calendario():
+            CalendarioModerno(self.frame, lambda data: prazo_var.set(data.strftime("%Y-%m-%d")))
+
+        btn_prazo = tk.Button(
             card,
-            date_pattern="yyyy-mm-dd",
-            mindate=date.today(),
-            maxdate=maxdate,
-            showweeknumbers=False,
-            width=18
+            textvariable=prazo_var,
+            font=("Segoe UI", 11),
+            bg=entrada_bg,
+            fg=entrada_fg,
+            relief="solid",
+            bd=1,
+            padx=10,
+            pady=5,
+            command=abrir_calendario
         )
-        prazo_entry.pack(pady=5, anchor="w")
+        btn_prazo.pack(pady=5, anchor="w")
 
         # -----------------------------
-        # BOTÕES MODERNOS E PEQUENOS
+        # BOTÕES
         # -----------------------------
-        def criar_botao(parent, texto, comando, cor="#0A66C2", hover="#084C8A"):
+        def criar_botao(parent, texto_btn, comando, cor=cor_botao, hover=cor_hover):
             btn = tk.Button(
                 parent,
-                text=texto,
+                text=texto_btn,
                 command=comando,
                 font=("Segoe UI", 11, "bold"),
                 bg=cor,
@@ -149,34 +200,27 @@ class CriarTarefaUI:
             descricao = descricao_text.get("1.0", "end").strip()
             prioridade = prioridade_combo.get().strip()
             estado = estado_combo.get().strip()
-            prazo = prazo_entry.get().strip()
+            prazo = prazo_var.get().strip()
 
-            # Validações
             if titulo == "":
                 self.mostrar_erro(card, "O título não pode estar vazio.")
                 return
-
             if descricao == "":
                 self.mostrar_erro(card, "A descrição não pode estar vazia.")
                 return
-
             if prioridade == "":
                 self.mostrar_erro(card, "Escolhe uma prioridade.")
                 return
-
             if estado == "":
                 self.mostrar_erro(card, "Escolhe um estado.")
                 return
-
             if prazo == "":
                 self.mostrar_erro(card, "Escolhe um prazo válido.")
                 return
 
-            # Criar tarefa
             criar_tarefa(titulo, descricao, prioridade, estado, prazo)
             renumerar_ids()
             voltar_menu_callback()
 
-        # Botões
         criar_botao(card, "Criar", submeter)
         criar_botao(card, "Voltar ao Menu", voltar_menu_callback, cor="#6C757D", hover="#5A6268")

@@ -1,40 +1,115 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
-from BLL.tarefas_bll import apagar_tarefa as apagar_bll
-from DAL.database import renumerar_ids
+from tkinter import ttk
+from BLL.tarefas_bll import apagar_tarefa
 
 class ApagarTarefaUI:
-    def __init__(self, tarefa, callback_recarregar):
-        self.tarefa = tarefa
-        self.callback_recarregar = callback_recarregar
 
-        janela = tk.Toplevel()
-        janela.title("Apagar Tarefa")
-        janela.configure(bg="#F3F3F3")
-        janela.geometry("400x400")
+    def __init__(self, frame, tarefa, voltar_callback):
 
-        card = tk.Frame(janela, bg="#FFFFFF", padx=20, pady=20, bd=1, relief="solid")
-        card.pack(fill="both", expand=True, pady=20)
+        # Limpar frame
+        for widget in frame.winfo_children():
+            widget.destroy()
 
-        ttk.Label(card, text="Apagar Tarefa", font=("Segoe UI", 18)).pack(pady=10)
+        self.frame = frame
 
-        ttk.Label(card, text=f"Título: {tarefa['titulo']}", font=("Segoe UI", 12)).pack(pady=5)
-        ttk.Label(card, text=f"Descrição: {tarefa['descricao']}", font=("Segoe UI", 10)).pack(pady=5)
+        # -----------------------------
+        # TEMA (Light / Dark)
+        # -----------------------------
+        modo_escuro = getattr(frame.master, "modo_escuro", False)
 
-        ttk.Label(card, text="Tens a certeza que queres apagar esta tarefa?",
-                  font=("Segoe UI", 11)).pack(pady=10)
+        if modo_escuro:
+            fundo = "#1E1E1E"
+            card_cor = "#2A2A2A"
+            texto = "#FFFFFF"
+            cor_botao = "#0A3A66"
+            cor_hover = "#06294A"
+        else:
+            fundo = "#F3F3F3"
+            card_cor = "#FFFFFF"
+            texto = "#1A1A1A"
+            cor_botao = "#0A66C2"
+            cor_hover = "#084C8A"
 
-        btn_frame = tk.Frame(card, bg="#FFFFFF")
-        btn_frame.pack(pady=10)
+        # Container central
+        container = tk.Frame(frame, bg=fundo)
+        container.pack(expand=True)
 
-        ttk.Button(btn_frame, text="Cancelar", width=12,
-                   command=janela.destroy).pack(side="left", padx=10)
+        # Card moderno estilo Windows 11
+        card = tk.Frame(
+            container,
+            bg=card_cor,
+            padx=40,
+            pady=40,
+            bd=0,
+            highlightthickness=1,
+            highlightbackground="#D0D0D0"
+        )
+        card.pack(pady=20)
 
-        ttk.Button(btn_frame, text="Apagar", width=12,
-                   command=lambda: self.apagar(janela)).pack(side="left", padx=10)
+        # Título
+        ttk.Label(
+            card,
+            text="Apagar Tarefa",
+            font=("Segoe UI", 22, "bold"),
+            foreground=texto,
+            background=card_cor
+        ).pack(pady=(0, 20))
 
-    def apagar(self, janela):
-        apagar_bll(self.tarefa["id"])
-        renumerar_ids()
-        janela.destroy()
-        self.callback_recarregar()
+        # Título da tarefa
+        ttk.Label(
+            card,
+            text=f"Título: {tarefa['titulo']}",
+            font=("Segoe UI", 12),
+            foreground=texto,
+            background=card_cor
+        ).pack(anchor="w", pady=5)
+
+        # Descrição da tarefa
+        ttk.Label(
+            card,
+            text=f"Descrição: {tarefa['descricao']}",
+            font=("Segoe UI", 12),
+            wraplength=400,
+            foreground=texto,
+            background=card_cor
+        ).pack(anchor="w", pady=5)
+
+        # Pergunta de confirmação
+        ttk.Label(
+            card,
+            text="Tens a certeza que queres apagar esta tarefa?",
+            font=("Segoe UI", 12, "bold"),
+            foreground="#B00020",
+            background=card_cor
+        ).pack(pady=20)
+
+        # -----------------------------
+        # BOTÕES MODERNOS
+        # -----------------------------
+        def criar_botao(parent, texto_btn, comando, cor=cor_botao, hover=cor_hover):
+            btn = tk.Button(
+                parent,
+                text=texto_btn,
+                command=comando,
+                font=("Segoe UI", 11, "bold"),
+                bg=cor,
+                fg="white",
+                activebackground=hover,
+                activeforeground="white",
+                relief="flat",
+                padx=12,
+                pady=6,
+                bd=0,
+                width=18
+            )
+            btn.pack(pady=6)
+            return btn
+
+        # Função apagar
+        def confirmar_apagar():
+            apagar_tarefa(tarefa["id"])
+            voltar_callback()
+
+        # Botões
+        criar_botao(card, "Apagar", confirmar_apagar, cor="#B00020", hover="#8A0018")
+        criar_botao(card, "Cancelar", voltar_callback, cor="#6C757D", hover="#5A6268")

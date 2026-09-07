@@ -11,7 +11,29 @@ def criar_tarefa(titulo, descricao, prioridade, estado, prazo):
     cursor.execute(sql, (titulo, descricao, prioridade, estado, prazo))
     conn.commit()
     conn.close()
+def atualizar_estado_tarefa(id_tarefa, novo_estado):
+    conn = obter_conexao()
+    cursor = conn.cursor()
 
+    cursor.execute(
+        "UPDATE tarefas SET estado = %s WHERE id = %s",
+        (novo_estado, id_tarefa)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def obter_tarefa_por_id(id_tarefa):
+    conn = obter_conexao()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM tarefas WHERE id = %s", (id_tarefa,))
+    tarefa = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+    return tarefa
 def listar_tarefas():
     conn = obter_conexao()
     cursor = conn.cursor(dictionary=True)

@@ -1,15 +1,20 @@
 from DAL.tarefas_dal import criar_tarefa, listar_tarefas
-from datetime import datetime, date
+import datetime
+from datetime import date
 from DAL.tarefas_dal import apagar_tarefa as apagar_tarefa_dal
 from DAL.tarefas_dal import editar_tarefa as editar_tarefa_dal
 from DAL.tarefas_dal import obter_tarefa_por_id_dal
 from DAL.tarefas_dal import concluir_tarefa_dal, obter_tarefa_por_id_dal
 from DAL.tarefas_concluidas_dal import guardar_tarefa_concluida
+from DAL.tarefas_dal import obter_tarefa_por_id
 
 from DAL.tarefas_dal import concluir_tarefa_dal, obter_tarefa_por_id_dal
 from DAL.tarefas_concluidas_dal import guardar_tarefa_concluida
+from DAL.tarefas_dal import obter_tarefa_por_id, atualizar_estado_tarefa
 
 def adicionar_tarefa(titulo, descricao, prioridade, estado, prazo):
+    hoje = date.today()
+
     # Validar título
     if not titulo.strip():
         return False, "O título não pode estar vazio."
@@ -50,19 +55,17 @@ def apagar_tarefa(id):
     apagar_tarefa_dal(id)
 
 def concluir_tarefa_bll(id_tarefa):
-    # Atualiza na base de dados
-    concluir_tarefa_dal(id_tarefa)
+    tarefa = obter_tarefa_por_id(id_tarefa)
 
-    # Vai buscar a tarefa já atualizada
-    tarefa = obter_tarefa_por_id_dal(id_tarefa)
+    hoje = date.today()
 
-    # Guarda no JSON de histórico
-    if tarefa:
-        guardar_tarefa_concluida(tarefa)
+    prazo = tarefa["prazo"]
+    if isinstance(prazo, str):
+        prazo = datetime.strptime(prazo, "%Y-%m-%d").date()
 
+    if prazo < hoje:
+        novo_estado = "Concluída com atraso"
+    else:
+        novo_estado = "Concluída"
 
-def concluir_tarefa_bll(id_tarefa):
-    concluir_tarefa_dal(id_tarefa)
-    tarefa = obter_tarefa_por_id_dal(id_tarefa)
-    if tarefa:
-        guardar_tarefa_concluida(tarefa)
+    atualizar_estado_tarefa(id_tarefa, novo_estado)
