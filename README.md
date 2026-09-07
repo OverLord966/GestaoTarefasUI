@@ -65,9 +65,9 @@ Lista as principais funcionalidades implementadas:
 
 [x] Apagar tarefa
 
-[ ] Guardar e carregar dados automaticamente
+[X] Dashboard a apresentar tarefas de acordo com a conclusão
 
-[ ] Exportar relatório de tarefas (opcional)
+[ ] Login e registo, criar grupos e atribuir 
 
 As checkboxes ficam marcadas à medida que a funcionalidade é implementada.
 
@@ -194,8 +194,8 @@ O diagrama completo está em [`assets/diagrama_arquitetura.png`](assets/diagrama
 ```
 Sessão 1 — Requisitos        ✅ Concluído
 Sessão 2 — Arquitetura       ✅ Concluído
-Sessão 3 — Desenvolvimento 1 🔄 Em curso
-Sessão 4 — Desenvolvimento 2 ⏳ Pendente
+Sessão 3 — Desenvolvimento 1 ✅ Concluído
+Sessão 4 — Desenvolvimento 2 🔄 Em curso
 Sessão 5 — Apresentação      ⏳ Pendente
 ```
 
