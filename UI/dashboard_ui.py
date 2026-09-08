@@ -1,8 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from DAL.tarefas_dal import listar_tarefas
+from DAL.database import obter_conexao
 from UI.listar_tarefas_ui import ListarTarefasUI
 import datetime
+
 
 class DashboardUI:
     def __init__(self, frame, voltar_menu_callback):
@@ -32,18 +34,29 @@ class DashboardUI:
             foreground=texto
         ).pack(pady=20)
 
+        # Aviso modo offline
+        if obter_conexao() is None:
+            ttk.Label(
+                container,
+                text="⚠ Modo Offline — Base de dados indisponível (a usar JSON)",
+                font=("Segoe UI", 11, "bold"),
+                background=fundo,
+                foreground="#FF8C00"
+            ).pack(pady=5)
+
         tarefas = listar_tarefas()
         hoje = datetime.date.today()
 
         total = len(tarefas)
-        concluidas = sum(1 for t in tarefas if t["estado"].lower() == "concluída")
-        concluidas_atraso = sum(1 for t in tarefas if t["estado"].lower() == "concluída com atraso")
+        concluidas = sum(1 for t in tarefas if "conclu" in t["estado"].lower() and "atras" not in t["estado"].lower())
+        concluidas_atraso = sum(1 for t in tarefas if "conclu" in t["estado"].lower() and "atras" in t["estado"].lower())
         atrasadas = sum(
             1 for t in tarefas
-            if ((t["prazo"] if isinstance(t["prazo"], datetime.date)
-                 else datetime.datetime.strptime(t["prazo"], "%Y-%m-%d").date()) < hoje)
-            and t["estado"].lower() != "concluída"
-            and t["estado"].lower() != "concluída com atraso"
+            if (
+                (t["prazo"] if isinstance(t["prazo"], datetime.date)
+                 else datetime.datetime.strptime(t["prazo"], "%Y-%m-%d").date()) < hoje
+            )
+            and "conclu" not in t["estado"].lower()
         )
         alta_prioridade = sum(1 for t in tarefas if t["prioridade"].lower() == "alta")
         quase_terminar = sum(1 for t in tarefas if t["estado"].lower() == "quase a terminar")
@@ -76,37 +89,61 @@ class DashboardUI:
              lambda: ListarTarefasUI(frame, voltar_menu_callback, mostrar_titulo=True))
 
         card(linha1, "Concluídas", concluidas, "#2E7D32",
-             lambda: ListarTarefasUI(frame, voltar_menu_callback, filtro="concluidas",
-                                     voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
-                                     mostrar_titulo=False))
+             lambda: ListarTarefasUI(
+                 frame,
+                 voltar_menu_callback,
+                 filtro="concluidas",
+                 voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
+                 mostrar_titulo=False
+             ))
 
         card(linha1, "Concluídas com Atraso", concluidas_atraso, "#FF8C00",
-             lambda: ListarTarefasUI(frame, voltar_menu_callback, filtro="concluidas_atraso",
-                                     voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
-                                     mostrar_titulo=False))
+             lambda: ListarTarefasUI(
+                 frame,
+                 voltar_menu_callback,
+                 filtro="concluidas_atraso",
+                 voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
+                 mostrar_titulo=False
+             ))
 
         linha2 = tk.Frame(container, bg=fundo)
         linha2.pack(fill="x", pady=10)
 
         card(linha2, "Em Atraso", atrasadas, "#C62828",
-             lambda: ListarTarefasUI(frame, voltar_menu_callback, filtro="atraso",
-                                     voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
-                                     mostrar_titulo=False))
+             lambda: ListarTarefasUI(
+                 frame,
+                 voltar_menu_callback,
+                 filtro="atraso",
+                 voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
+                 mostrar_titulo=False
+             ))
 
         card(linha2, "Alta Prioridade", alta_prioridade, "#FFD966",
-             lambda: ListarTarefasUI(frame, voltar_menu_callback, filtro="alta",
-                                     voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
-                                     mostrar_titulo=False))
+             lambda: ListarTarefasUI(
+                 frame,
+                 voltar_menu_callback,
+                 filtro="alta",
+                 voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
+                 mostrar_titulo=False
+             ))
 
         card(linha2, "Quase a Terminar", quase_terminar, "#C6E0B4",
-             lambda: ListarTarefasUI(frame, voltar_menu_callback, filtro="quase",
-                                     voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
-                                     mostrar_titulo=False))
+             lambda: ListarTarefasUI(
+                 frame,
+                 voltar_menu_callback,
+                 filtro="quase",
+                 voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
+                 mostrar_titulo=False
+             ))
 
         card(linha2, "Por Fazer", por_fazer, "#BDD7EE",
-             lambda: ListarTarefasUI(frame, voltar_menu_callback, filtro="por_fazer",
-                                     voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
-                                     mostrar_titulo=False))
+             lambda: ListarTarefasUI(
+                 frame,
+                 voltar_menu_callback,
+                 filtro="por_fazer",
+                 voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback),
+                 mostrar_titulo=False
+             ))
 
         tk.Button(
             container,

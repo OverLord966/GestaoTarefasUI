@@ -26,6 +26,15 @@ class ListarTarefasUI:
             texto = "#1A1A1A"
             tabela_bg = "#FFFFFF"
             tabela_fg = "#000000"
+        # Tags diferentes para modo claro e escuro
+        if modo_escuro:
+            linha_bg = "#2A2A2A"       # fundo escuro
+            linha_alt_bg = "#1E1E1E"   # fundo ainda mais escuro
+            linha_fg = "#FFFFFF"       # texto branco
+        else:
+            linha_bg = "#F9F9F9"       # fundo claro
+            linha_alt_bg = "#FFFFFF"   # fundo branco
+            linha_fg = "#000000"       # texto preto
 
         self.frame = frame
         self.voltar_menu_callback = voltar_menu_callback
@@ -72,13 +81,17 @@ class ListarTarefasUI:
         tree.pack(pady=10, fill="both", expand=True)
         tree.bind("<Double-1>", lambda event: self._abrir_detalhes(tree, event))
 
-        tree.tag_configure("linha", background="#F9F9F9")
-        tree.tag_configure("linha_alt", background="#FFFFFF")
+        tree.tag_configure("linha", background=linha_bg, foreground=linha_fg)
+        tree.tag_configure("linha_alt", background=linha_alt_bg, foreground=linha_fg)
         tree.tag_configure("concluida", background="#2E7D32", foreground="white")
         tree.tag_configure("concluida_atraso", background="#FF8C00", foreground="white")
         tree.tag_configure("atraso", background="#C62828", foreground="white")
+    
 
         tarefas = listar_tarefas()
+        # Ordenar por ID
+        tarefas = sorted(tarefas, key=lambda t: t["id"])
+
         hoje = datetime.date.today()
 
         # -----------------------------
@@ -207,6 +220,15 @@ class ListarTarefasUI:
             texto = "#1A1A1A"
             desc_bg = "#FFFFFF"
             desc_fg = "#000000"
+        # Tags diferentes para modo claro e escuro
+        if modo_escuro:
+            linha_bg = "#2A2A2A"       # fundo escuro
+            linha_alt_bg = "#1E1E1E"   # fundo ainda mais escuro
+            linha_fg = "#FFFFFF"       # texto branco
+        else:
+            linha_bg = "#F9F9F9"       # fundo claro
+            linha_alt_bg = "#FFFFFF"   # fundo branco
+            linha_fg = "#000000"       # texto preto
 
         detalhes.title("Detalhes da Tarefa")
         detalhes.configure(bg=fundo)

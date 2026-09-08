@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 from datetime import date
-from BLL.tarefas_bll import criar_tarefa
 from DAL.database import renumerar_ids
 from UI.calendario_moderno import CalendarioModerno
+from DAL.tarefas_dal import criar_tarefa_dal, listar_tarefas
 
 class CriarTarefaUI:
 
@@ -194,7 +194,6 @@ class CriarTarefaUI:
             btn.pack(pady=6)
             return btn
 
-        # Função submeter
         def submeter():
             titulo = titulo_entry.get().strip()
             descricao = descricao_text.get("1.0", "end").strip()
@@ -218,9 +217,12 @@ class CriarTarefaUI:
                 self.mostrar_erro(card, "Escolhe um prazo válido.")
                 return
 
-            criar_tarefa(titulo, descricao, prioridade, estado, prazo)
+            # CHAMADA CORRETA → FUNCIONA ONLINE + OFFLINE
+            criar_tarefa_dal(titulo, descricao, prioridade, estado, prazo)
             renumerar_ids()
             voltar_menu_callback()
+
+
 
         criar_botao(card, "Criar", submeter)
         criar_botao(card, "Voltar ao Menu", voltar_menu_callback, cor="#6C757D", hover="#5A6268")

@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from UI.calendario_moderno import CalendarioModerno
+from DAL.tarefas_dal import editar_tarefa_dal
 
 class EditarTarefaUI:
 
@@ -178,15 +179,16 @@ class EditarTarefaUI:
             return btn
 
         def guardar():
-            novo_titulo = titulo_entry.get().strip()
-            nova_desc = descricao_text.get("1.0", "end").strip()
-            nova_prioridade = prioridade_combo.get().strip()
-            novo_estado = estado_combo.get().strip()
-            novo_prazo = prazo_var.get().strip()
+            tarefa_editada = {
+                "id": tarefa["id"],
+                "titulo": titulo_entry.get().strip(),
+                "descricao": descricao_text.get("1.0", "end").strip(),
+                "prioridade": prioridade_combo.get().strip(),
+                "estado": estado_combo.get().strip(),
+                "prazo": prazo_var.get().strip()
+            }
 
-            # Aqui chamarias a função que atualiza a tarefa
-            # atualizar_tarefa(...)
-
+            editar_tarefa_dal(tarefa_editada)
             voltar_callback()
 
         criar_botao(card, "Guardar Alterações", guardar)
