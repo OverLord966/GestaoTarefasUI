@@ -9,15 +9,6 @@
         "data_criacao": "2026-09-10"
     },
     {
-        "id": 2,
-        "titulo": "teste",
-        "descricao": "teste",
-        "prioridade": "Média",
-        "estado": "Em progresso",
-        "prazo": "2026-09-10",
-        "data_criacao": "2026-09-10"
-    },
-    {
         "id": 3,
         "titulo": "Tarefa Antiga 1",
         "descricao": "Descrição da tarefa criada dias atrás",
@@ -34,5 +25,23 @@
         "estado": "Em progresso",
         "prazo": "2026-09-05",
         "data_criacao": "2026-09-05"
+    },
+    {
+        "id": 5,
+        "titulo": "Teste",
+        "descricao": "Teste",
+        "prioridade": "Média",
+        "estado": "Em progresso",
+        "prazo": "2030-04-12",
+        "data_criacao": "2026-09-10"
+    },
+    {
+        "id": 6,
+        "titulo": "Teste Offline",
+        "descricao": "Teste offline por JSON",
+        "prioridade": "Média",
+        "estado": "Por fazer",
+        "prazo": "2026-09-24",
+        "data_criacao": "2026-09-10"
     }
 ]
