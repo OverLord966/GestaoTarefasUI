@@ -1,83 +1,38 @@
 [
     {
         "id": 1,
-        "titulo": "nao ha id 1",
-        "descricao": "cade o id 1",
+        "titulo": "Minha Primeira Tarefa",
+        "descricao": "Descrição da tarefa de teste",
         "prioridade": "Média",
         "estado": "Por fazer",
-        "prazo": "2026-09-10",
+        "prazo": "2026-09-30",
         "data_criacao": "2026-09-10"
     },
     {
         "id": 2,
-        "titulo": "asd",
-        "descricao": "dsa",
+        "titulo": "teste",
+        "descricao": "teste",
         "prioridade": "Média",
-        "estado": "concluída",
-        "prazo": "2026-09-01",
-        "data_criacao": "2026-09-01"
-    },
-    {
-        "id": 3,
-        "titulo": "asd",
-        "descricao": "asd",
-        "prioridade": "Média",
-        "estado": "Por fazer",
-        "prazo": "2026-09-30",
-        "data_criacao": "2026-09-07"
-    },
-    {
-        "id": 4,
-        "titulo": "asd",
-        "descricao": "dsa",
-        "prioridade": "Média",
-        "estado": "Em progresso",
-        "prazo": "2026-09-25",
-        "data_criacao": "2026-09-07"
-    },
-    {
-        "id": 5,
-        "titulo": "Teste sem internet",
-        "descricao": "teste sem internet",
-        "prioridade": "Baixa",
-        "estado": "Em progresso",
-        "prazo": "2026-09-17",
-        "data_criacao": "2026-09-07"
-    },
-    {
-        "id": 6,
-        "titulo": "Rip",
-        "descricao": "Rip",
-        "prioridade": "Média",
-        "estado": "Em progresso",
-        "prazo": "2026-09-08",
-        "data_criacao": "2026-09-08"
-    },
-    {
-        "id": 7,
-        "titulo": "criação do relatório",
-        "descricao": "Relatório criado",
-        "prioridade": "Alta",
-        "estado": "Em progresso",
-        "prazo": "2026-09-10",
-        "data_criacao": "2026-09-08"
-    },
-    {
-        "id": 8,
-        "titulo": "criação do relatório",
-        "descricao": "Relatório criado",
-        "prioridade": "Alta",
-        "estado": "Em progresso",
-        "prazo": "2026-09-10",
-        "data_criacao": "2026-09-08"
-    },
-    {
-        "id": 9,
-        "titulo": "Apresentação da aplicação",
-        "descricao": "Apresentação da aplicação",
-        "prioridade": "Alta",
         "estado": "Em progresso",
         "prazo": "2026-09-10",
         "data_criacao": "2026-09-10"
+    },
+    {
+        "id": 3,
+        "titulo": "Tarefa Antiga 1",
+        "descricao": "Descrição da tarefa criada dias atrás",
+        "prioridade": "Alta",
+        "estado": "Concluída",
+        "prazo": "2026-09-15",
+        "data_criacao": "2026-09-05"
+    },
+    {
+        "id": 4,
+        "titulo": "Tarefa Antiga 2",
+        "descricao": "Outra tarefa de teste",
+        "prioridade": "Média",
+        "estado": "Em progresso",
+        "prazo": "2026-09-05",
+        "data_criacao": "2026-09-05"
     }
 ]

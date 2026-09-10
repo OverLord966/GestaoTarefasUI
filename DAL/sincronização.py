@@ -1,4 +1,5 @@
 from DAL.database import obter_conexao
+
 # -------------------------------------------------
 # SINCRONIZAÇÃO JSON → MYSQL
 # -------------------------------------------------
@@ -24,23 +25,21 @@ def sincronizar_json_para_mysql():
         status = t.get("sync_status")
 
         try:
-
             # -----------------------------
-            # CRIAR (Sem passar o 'id' para o MySQL gerar AUTO_INCREMENT)
-            # -----------------------------
-            # -----------------------------
-            # CRIAR (Força o ID gerado offline no MySQL)
-            # -----------------------------
-            # -----------------------------
-            # CRIAR (Insere explicitamente com o ID vago calculado offline)
+            # CRIAR
             # -----------------------------
             if status == "create":
+
+                # Garante que enviado o ID de utilizador existente (ex: 1)
+                criado_por_id = t.get("criado_por")
+                if not criado_por_id:
+                    criado_por_id = 1
 
                 cursor.execute(
                     """
                     INSERT INTO tarefas
-                    (id, titulo, descricao, prioridade, estado, prazo)
-                    VALUES (%s, %s, %s, %s, %s, %s)
+                    (id, titulo, descricao, prioridade, estado, prazo, criado_por)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """,
                     (
                         t["id"],
@@ -48,7 +47,8 @@ def sincronizar_json_para_mysql():
                         t["descricao"],
                         t["prioridade"],
                         t["estado"],
-                        str(t["prazo"])
+                        str(t["prazo"]),
+                        criado_por_id  # <--- ADICIONADO AQUI
                     )
                 )
 
@@ -97,4 +97,7 @@ def sincronizar_json_para_mysql():
     cursor.close()
     conn.close()
 
-    print("Sincronização concluída!")
+    # Opcional: Limpar o ficheiro JSON após sincronizar para não tentar reenviar
+    salvar_json([])
+
+    print("Sincronização concluída com sucesso!")

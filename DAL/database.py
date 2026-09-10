@@ -11,7 +11,7 @@ def obter_conexao():
             host="localhost",
             user="root",
             password="",
-            database="gestor_tarefas"
+            database="gestao_tarefas"
         )
 
         if conn.is_connected():

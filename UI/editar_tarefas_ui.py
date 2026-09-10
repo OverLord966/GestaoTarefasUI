@@ -35,6 +35,16 @@ class EditarTarefaUI:
             cor_botao = "#0A66C2"
             cor_hover = "#084C8A"
 
+        # Aplicar tema nativo moderno do sistema
+        style = ttk.Style()
+        try:
+            style.theme_use('vista')
+        except tk.TclError:
+            try:
+                style.theme_use('xpnative')
+            except tk.TclError:
+                pass
+
         # Container central
         container = tk.Frame(frame, bg=fundo)
         container.pack(expand=True)
@@ -67,7 +77,7 @@ class EditarTarefaUI:
 
         titulo_entry = tk.Entry(card, width=45, bg=entrada_bg, fg=entrada_fg,
                                 relief="solid", bd=1, font=("Segoe UI", 11))
-        titulo_entry.insert(0, tarefa["titulo"])
+        titulo_entry.insert(0, tarefa.get("titulo", ""))
         titulo_entry.pack(pady=5, anchor="w")
 
         # -----------------------------
@@ -91,7 +101,7 @@ class EditarTarefaUI:
             bg=entrada_bg,
             fg=entrada_fg
         )
-        descricao_text.insert("1.0", tarefa["descricao"])
+        descricao_text.insert("1.0", tarefa.get("descricao", ""))
         descricao_text.pack(side="left", fill="both", expand=True)
 
         scroll = ttk.Scrollbar(descricao_frame, orient="vertical", command=descricao_text.yview)
@@ -99,20 +109,40 @@ class EditarTarefaUI:
         descricao_text.configure(yscrollcommand=scroll.set)
 
         # -----------------------------
+        # FUNÇÃO AUXILIAR DE EXTRAÇÃO DE VALORES
+        # -----------------------------
+        def obter_valor_tarefa(dicionario, *chaves_possiveis):
+            for chave in chaves_possiveis:
+                if chave in dicionario and dicionario[chave] is not None:
+                    return str(dicionario[chave]).strip()
+            return ""
+
+        # Função para forçar a atualização visual no mapeamento do widget
+        def forcar_render(event, combo, valor):
+            combo.set(valor)
+
+        # -----------------------------
         # PRIORIDADE
         # -----------------------------
         ttk.Label(card, text="Prioridade:", anchor="w", font=("Segoe UI", 11),
                   foreground=texto, background=card_cor).pack(fill="x")
 
-        prioridade_var = tk.StringVar(value=tarefa["prioridade"])
+        opcoes_prioridade = ["Alta", "Média", "Baixa"]
+        val_prio = obter_valor_tarefa(tarefa, "prioridade", "Prioridade", "prioridade_nome")
+        prio_selecionada = next((p for p in opcoes_prioridade if p.lower() == val_prio.lower()), opcoes_prioridade[1])
+
+        prioridade_var = tk.StringVar(value=prio_selecionada)
         prioridade_combo = ttk.Combobox(
             card,
             textvariable=prioridade_var,
-            values=["Alta", "Média", "Baixa"],
+            values=opcoes_prioridade,
             state="readonly",
-            width=20
+            font=("Segoe UI", 10),
+            width=22
         )
         prioridade_combo.pack(pady=5, anchor="w")
+        prioridade_combo.set(prio_selecionada)
+        prioridade_combo.bind("<Map>", lambda e: forcar_render(e, prioridade_combo, prio_selecionada))
 
         # -----------------------------
         # ESTADO
@@ -120,24 +150,31 @@ class EditarTarefaUI:
         ttk.Label(card, text="Estado:", anchor="w", font=("Segoe UI", 11),
                   foreground=texto, background=card_cor).pack(fill="x")
 
-        estado_var = tk.StringVar(value=tarefa["estado"])
+        opcoes_estado = ["Por fazer", "Em progresso", "Quase a terminar", "Concluída"]
+        val_estado = obter_valor_tarefa(tarefa, "estado", "Estado", "estado_nome")
+        estado_selecionado = next((e for e in opcoes_estado if e.lower() == val_estado.lower()), opcoes_estado[0])
+
+        estado_var = tk.StringVar(value=estado_selecionado)
         estado_combo = ttk.Combobox(
             card,
             textvariable=estado_var,
-            values=["Por fazer", "Em progresso", "Quase a terminar", "Concluída"],
+            values=opcoes_estado,
             state="readonly",
-            width=20
+            font=("Segoe UI", 10),
+            width=22
         )
         estado_combo.pack(pady=5, anchor="w")
+        estado_combo.set(estado_selecionado)
+        estado_combo.bind("<Map>", lambda e: forcar_render(e, estado_combo, estado_selecionado))
 
         # -----------------------------
-        # PRAZO (Calendário Moderno)
+        # PRAZO
         # -----------------------------
         ttk.Label(card, text="Prazo:", anchor="w", font=("Segoe UI", 11),
                   foreground=texto, background=card_cor).pack(fill="x")
 
         prazo_var = tk.StringVar()
-        prazo_var.set(tarefa["prazo"])
+        prazo_var.set(tarefa.get("prazo", ""))
 
         def abrir_calendario():
             CalendarioModerno(self.frame, lambda data: prazo_var.set(data.strftime("%Y-%m-%d")))
@@ -180,7 +217,7 @@ class EditarTarefaUI:
 
         def guardar():
             tarefa_editada = {
-                "id": tarefa["id"],
+                "id": tarefa.get("id"),
                 "titulo": titulo_entry.get().strip(),
                 "descricao": descricao_text.get("1.0", "end").strip(),
                 "prioridade": prioridade_combo.get().strip(),
