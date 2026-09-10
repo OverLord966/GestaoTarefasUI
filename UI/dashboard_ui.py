@@ -86,7 +86,12 @@ class DashboardUI:
         linha1.pack(fill="x", pady=10)
 
         card(linha1, "Total de Tarefas", total, card_cor,
-             lambda: ListarTarefasUI(frame, voltar_menu_callback, mostrar_titulo=True))
+             lambda: ListarTarefasUI(
+                 frame, 
+                 voltar_menu_callback, 
+                 voltar_dashboard_callback=lambda: DashboardUI(frame, voltar_menu_callback), 
+                 mostrar_titulo=False
+             ))
 
         card(linha1, "Concluídas", concluidas, "#2E7D32",
              lambda: ListarTarefasUI(
